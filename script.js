@@ -1,14 +1,27 @@
 // Sample blog posts data (can be replaced with AI-generated content)
 const blogPosts = [
-  {
-    title: "The Art of Minimalism",
-    content: "Minimalism is about focusing on what truly matters and removing the unnecessary. It's a lifestyle that promotes clarity and purpose."
-  },
-  {
-    title: "Why Simplicity is Key",
-    content: "Simplicity allows us to reduce stress, increase productivity, and find joy in the little things. It's a powerful tool for modern living."
-  }
-];
+  async function generateBlogPost(prompt) {
+  const response = await fetch('https://api.deepseek.com/generate', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer sk-4c024ef4c78744b5b3e1909e643a0794'
+    },
+    body: JSON.stringify({ prompt: prompt })
+  });
+  const data = await response.json();
+  return data.content;
+}
+
+async function updateBlog() {
+  const prompt = "Write a blog post about the benefits of minimalism";
+  const newPost = await generateBlogPost(prompt);
+  blogPosts.push({ title: "New Post", content: newPost });
+  displayPosts();
+}
+
+// Call updateBlog() to generate and display new content
+updateBlog();
 
 // Function to display blog posts
 function displayPosts() {
