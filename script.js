@@ -1,5 +1,4 @@
 // Sample blog posts data (can be replaced with AI-generated content)
-const blogPosts = [
   async function generateBlogPost(prompt) {
   const response = await fetch('https://api.deepseek.com/generate', {
     method: 'POST',
