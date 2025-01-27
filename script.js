@@ -88,10 +88,8 @@ async function updateBlog() {
   }
 }
 
-// Display initial posts when the page loads
-window.onload = () => {
-  displayPosts();
+// Add event listener to the "Generate Blog" button
+document.getElementById('generate-blog-button').addEventListener('click', updateBlog);
 
-  // Optionally, update the blog with new AI-generated content
-  updateBlog();
-};
+// Display initial posts when the page loads
+window.onload = displayPosts;
