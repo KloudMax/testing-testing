@@ -73,13 +73,13 @@ async function generateBlogContent(prompt) {
 
 // Function to update the blog with new AI-generated content
 async function updateBlog() {
-  const prompt = "Write a blog post about the benefits of minimalism in modern life.";
+  const prompt = "Write a blog post about the benefits of video games.";
   const newContent = await generateBlogContent(prompt);
 
   if (newContent) {
     // Add the new post to the blogPosts array
     blogPosts.unshift({
-      title: "New Post: The Power of Minimalism",
+      title: "New Post: The Benefits of Video Games",
       content: newContent
     });
 
