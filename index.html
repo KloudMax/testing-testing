@@ -1,37 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Minimalist Blog</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime & Gaming Nexus</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <header>
-    <h1>My Minimalist Blog</h1>
-    <nav>
-      <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Contact</a></li>
-      </ul>
-    </nav>
-  </header>
+    <header class="header">
+        <nav class="nav">
+            <a href="#" class="logo">AnimeNexus</a>
+            <div class="nav-links">
+                <a href="#news">News</a>
+                <a href="#chat">Chat</a>
+            </div>
+        </nav>
+    </header>
 
-  <main>
-    <section id="blog-posts">
-      <h2>Latest Posts</h2>
-      <button id="generate-blog-button">Generate New Blog Post</button>
-      <div id="posts-container">
-        <!-- Blog posts will be dynamically inserted here -->
-      </div>
-    </section>
-  </main>
+    <main class="news-container">
+        <h2>Latest Updates</h2>
+        <div class="news-grid">
+            <div class="news-card">
+                <h3>New Anime Season Announcement</h3>
+                <p>Check out the latest releases for Fall 2024!</p>
+                <span class="tag anime">Anime</span>
+            </div>
+            <div class="news-card">
+                <h3>Elden Ring DLC Release Date</h3>
+                <p>Shadow of the Erdtree expansion coming June 2024</p>
+                <span class="tag gaming">Gaming</span>
+            </div>
+            <div class="news-card">
+                <h3>Crunchyroll Original Series</h3>
+                <p>New exclusive anime productions announced</p>
+                <span class="tag anime">Anime</span>
+            </div>
+            <div class="news-card">
+                <h3>Game Awards 2024 Winners</h3>
+                <p>See which anime-inspired games took home awards</p>
+                <span class="tag gaming">Gaming</span>
+            </div>
+        </div>
+    </main>
 
-  <footer>
-    <p>&copy; 2023 My Minimalist Blog. All rights reserved.</p>
-  </footer>
+    <div class="chat-container">
+        <div class="chat-header" onclick="toggleChat()">Open Chat 💬</div>
+        <div class="chat-body" id="chatMessages"></div>
+        <div class="chat-input">
+            <input type="text" id="nickname" placeholder="Nickname" maxlength="20">
+            <div class="input-group">
+                <input type="text" id="messageInput" placeholder="Type your message..." maxlength="200">
+                <div id="charCount">0/200</div>
+            </div>
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
 
-  <script src="script.js"></script>
+    <script src="/js/app.js"></script>
 </body>
 </html>
