@@ -1,103 +1,99 @@
-// Replace with your DeepSeek API key
-const DEEPSEEK_API_KEY = 'sk-4c024ef4c78744b5b3e1909e643a0794';
+// Chat System Enhancements
+let isChatOpen = false;
+const chatMessages = document.getElementById('chatMessages');
+const messageInput = document.getElementById('messageInput');
+const nicknameInput = document.getElementById('nickname');
+const charCount = document.getElementById('charCount');
 
-// DeepSeek API endpoint
-const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
+// Load saved messages and nickname
+let messages = JSON.parse(localStorage.getItem('chatMessages')) || [];
+const savedNickname = localStorage.getItem('chatNickname') || '';
 
-// Sample blog posts data (can be replaced with AI-generated content)
-let blogPosts = [
-  {
-    title: "The Art of Minimalism",
-    content: "Minimalism is about focusing on what truly matters and removing the unnecessary. It's a lifestyle that promotes clarity and purpose."
-  },
-  {
-    title: "Why Simplicity is Key",
-    content: "Simplicity allows us to reduce stress, increase productivity, and find joy in the little things. It's a powerful tool for modern living."
-  }
-];
-
-// Function to display blog posts
-function displayPosts() {
-  const postsContainer = document.getElementById('posts-container');
-  postsContainer.innerHTML = ''; // Clear existing content
-
-  blogPosts.forEach(post => {
-    const postElement = document.createElement('div');
-    postElement.classList.add('post');
-
-    const postTitle = document.createElement('h3');
-    postTitle.textContent = post.title;
-
-    const postContent = document.createElement('p');
-    postContent.textContent = post.content;
-
-    postElement.appendChild(postTitle);
-    postElement.appendChild(postContent);
-    postsContainer.appendChild(postElement);
-  });
+function initChat() {
+    nicknameInput.value = savedNickname;
+    loadMessages();
+    messageInput.addEventListener('input', updateCharCount);
+    messageInput.addEventListener('keypress', handleTyping);
 }
 
-// Function to generate blog content using DeepSeek API
-async function generateBlogContent(prompt) {
-  try {
-    const response = await fetch(DEEPSEEK_API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: 'deepseek-chat', // Specify the model
-        messages: [
-          {
-            role: 'user',
-            content: prompt
-          }
-        ],
-        max_tokens: 500, // Adjust as needed
-        temperature: 0.7 // Adjust creativity level
-      })
-    });
+function toggleChat() {
+    isChatOpen = !isChatOpen;
+    document.querySelector('.chat-body').style.display = isChatOpen ? 'block' : 'none';
+    document.querySelector('.chat-input').style.display = isChatOpen ? 'flex' : 'none';
+    if (isChatOpen) messageInput.focus();
+}
 
-    if (!response.ok) {
-      throw new Error(`API request failed with status ${response.status}`);
+function sendMessage() {
+    const messageText = messageInput.value.trim();
+    const nickname = nicknameInput.value.trim();
+
+    if (messageText && nickname) {
+        const newMessage = {
+            nickname,
+            text: filterMessage(messageText),
+            timestamp: new Date().toISOString()
+        };
+
+        messages.push(newMessage);
+        if (messages.length > 100) messages.shift(); // Keep only last 100 messages
+        
+        saveMessages();
+        appendMessage(newMessage);
+        messageInput.value = '';
+        updateCharCount();
+        playNotificationSound();
     }
-
-    const data = await response.json();
-    return data.choices[0].message.content; // Extract generated content
-  } catch (error) {
-    console.error('Error generating blog content:', error);
-    return null;
-  }
 }
 
-// Function to update the blog with new AI-generated content
-async function updateBlog() {
-  const button = document.getElementById('generate-blog-button');
-  button.disabled = true;
-  button.textContent = 'generating...';
-  
-  const prompt = "Write a blog post about some recent video game news.";
-  const newContent = await generateBlogContent(prompt);
-
-  if (newContent) {
-    // Add the new post to the blogPosts array
-    blogPosts.unshift({
-      title: "New Post: Today in gaming",
-      content: newContent
-    });
-
-    // Display the updated posts
-    displayPosts();
-  }
+function filterMessage(text) {
+    const blockedWords = ['badword1', 'badword2', 'badword3'];
+    return text.replace(new RegExp(blockedWords.join('|'), 'gi'), '****');
 }
 
-  button.disabled = false;
-  button.textContent = 'Generate New Blog Post';
+function appendMessage(message) {
+    const messageElement = document.createElement('div');
+    messageElement.className = 'message';
+    messageElement.innerHTML = `
+        <strong style="color: ${getUserColor(message.nickname)}">
+            ${message.nickname}:
+        </strong> 
+        ${message.text}
+        <small style="opacity:0.7">${new Date(message.timestamp).toLocaleTimeString()}</small>
+    `;
+    chatMessages.appendChild(messageElement);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-// Add event listener to the "Generate Blog" button
-document.getElementById('generate-blog-button').addEventListener('click', updateBlog);
+function loadMessages() {
+    chatMessages.innerHTML = '';
+    messages.forEach(appendMessage);
+}
 
-// Display initial posts when the page loads
-window.onload = displayPosts;
+function saveMessages() {
+    localStorage.setItem('chatMessages', JSON.stringify(messages));
+    localStorage.setItem('chatNickname', nicknameInput.value);
+}
+
+function getUserColor(username) {
+    const colors = ['#7d5fff', '#00f3ff', '#ff6b6b', '#4ecdc4'];
+    return colors[username.length % colors.length];
+}
+
+function updateCharCount() {
+    charCount.textContent = `${messageInput.value.length}/200`;
+}
+
+function handleTyping(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+    }
+}
+
+function playNotificationSound() {
+    const audio = new Audio('/sounds/notification.mp3');
+    audio.play().catch(() => { /* Handle audio play restrictions */ });
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', initChat);
