@@ -73,6 +73,10 @@ async function generateBlogContent(prompt) {
 
 // Function to update the blog with new AI-generated content
 async function updateBlog() {
+  const button = document.getElementById('generate-blog-button');
+  button.disabled = true;
+  button.textContent = 'generating...';
+  
   const prompt = "Write a blog post about some recent video game news.";
   const newContent = await generateBlogContent(prompt);
 
@@ -86,6 +90,10 @@ async function updateBlog() {
     // Display the updated posts
     displayPosts();
   }
+}
+
+  button.disabled = false;
+  button.textContent = 'Generate New Blog Post';
 }
 
 // Add event listener to the "Generate Blog" button
