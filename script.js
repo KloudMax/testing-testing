@@ -73,13 +73,13 @@ async function generateBlogContent(prompt) {
 
 // Function to update the blog with new AI-generated content
 async function updateBlog() {
-  const prompt = "Write a blog post about the benefits of video games.";
+  const prompt = "Write a blog post about some recent video game news.";
   const newContent = await generateBlogContent(prompt);
 
   if (newContent) {
     // Add the new post to the blogPosts array
     blogPosts.unshift({
-      title: "New Post: The Benefits of Video Games",
+      title: "New Post: Today in gaming",
       content: newContent
     });
 
